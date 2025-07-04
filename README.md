@@ -1,7 +1,7 @@
 # Active-Directory-Project
 
 ## Objective
-Build a fully functional domain environment on premise by creating a logical diagram, installing & configuring: Active Directory (AD), Splunk, Windows (Wins) machine & Kali Linux machine. This guided project provides a basic understanding or how a domain environment works, how to ingest events to a Security Information and Event Management (SIEM) & generate telemetry related to attacks. 
+Build a fully functional domain environment on premise by creating a logical diagram, installing & configuring: Active Directory (AD), Splunk, Windows (Wins) machine & Kali Linux machine. This guided project provides a basic understanding of how a domain environment works, how to ingest events to a Security Information and Event Management (SIEM), and generate telemetry related to attacks. 
 
 Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.com/watch?v=mWqYyl89QaY). 
 
@@ -29,4 +29,5 @@ This project will be split into 5 parts:
 4. Configure AD on Wins server and promote to DC, create new domian users, and join the target machien into the domain
 5. Generate telemtry with Kali & ART by attacking one of the users in part 4.
 
-#### Part 1
+#### Part 1: Create & Map out a Logical Diagram
+Navigate to draw.io > search for a server icon and duplicate it, 1 for Splunk & 1 for AD > search for computer icon and duplicate it, 1 for target machine & 1 for attacker machine > change colour of attacker machine to red
