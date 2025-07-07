@@ -75,7 +75,7 @@ Server Manager: <br/>
 Need to install Splunk server: download at https://ubuntu.com/server > set-up the Splunk VM to have higher processing capabilities compared to other VMs because it will be ingesting data and running searches > start the VM > 1st option > DONE on most of the configuration default options > input account credentials > reboot > login > run a command to update and upgrade all repositories > server is good to go after restart > take a snapshot of the VM. 
 <p align="center">
 Ubuntu server download: <br/>
-<img src="https://i.imgur.com/D0UD5CX.png" height="50%" width="50%" alt="Active-Directory-Project"/>
+<img src="https://i.imgur.com/D0UD5CX.png" height="60%" width="60%" alt="Active-Directory-Project"/>
 <br/>
 Splunk VM set-up with higher RAM & disk size: <br/>
 <img src="https://i.imgur.com/Edx4K1u.png" height="50%" width="50%" alt="Active-Directory-Project"/>
