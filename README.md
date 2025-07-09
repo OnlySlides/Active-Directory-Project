@@ -71,6 +71,7 @@ Start the VM & install the OS: <br/>
 Server Manager: <br/>
 <img src="https://i.imgur.com/mQa1mMa.png" width="80%" alt="Active-Directory-Project"/>
 <br/>
+<br/>
 
 Need to install Splunk server: download at https://ubuntu.com/server > set-up the Splunk VM to have higher processing capabilities compared to other VMs because it will be ingesting data and running searches > start the VM > 1st option > DONE on most of the configuration default options > input account credentials > reboot > login > run a command to update and upgrade all repositories > server is good to go after restart > take a snapshot of the VM. 
 <p align="center">
@@ -97,5 +98,74 @@ Server is now fully updated: <br/>
 <br/>
 
 We now have 4 VMs installed.
+<p align="center">
+4 VMs: <br/>
+<img src="https://i.imgur.com/bE8F2hi.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
 
 #### Part 3: Install Sysmon & Splunk onto Wins target machine & Wins server
+Create NAT network so VMs can be on the same network but still have internet access. In VB > Tools > Network > NAT Networks > Create > edit IP address to the Network IP address in the diagram > Apply. <br/>
+Navigate to Splunk VM settings to change network settings to NAT network. Right click on the Splunk machine > Settings > Network > Attached to NAT Network > elect the Nat Network that was just created. <br/>
+Do the same for all the other VMs (ADDC01, Kali, Windows); not shown below but the steps are the same as above. 
+<p align="center">
+NAT Network creation with IP address of 192.168.10.0/24: <br/>
+<img src="https://i.imgur.com/IIy9s4y.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Attaching NAT Network to Splunk VM: <br/>
+<img src="https://i.imgur.com/UYfR6DV.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+  
+Need to set up a static IP address of 192.168.10.10 for the Splunk server to match our diagram. <br/>
+Start Splunk server VM > "ip a" command to check IP address of the server > IP address is not what we want, "sudo nano /etc/netplan/00-installer-config.yaml" command > using arrow keys, replace 'true' with 'no' from dhcp4 indicating we do not want DHCP > press Enter key > press Tab key 3 times > input "addresses: [192.168.10.10/24] > press Enter key & Tab key 3 times > input "nameservers: "(spaces after the colon are intentional) > press Enter key & Tab key 5 times > input "addresses: [8.8.8.8]" which is Google's DNS IP address > press Enter key & Tab key 3 times > input "routes: " > press Enter key & Tab key 5 times > input "- to: default" to indicate default route > press Enter key & Tab key 6 times > input "via: 192.168.10.1" which is the gateway. Save configuration by holding Ctrl X > Y > Enter key. 
+<p align="center">
+Check IP address of Splunk server: <br/>
+<img src="https://i.imgur.com/qDD3abO.png" width="55%" alt="Active-Directory-Project"/>
+<br/>
+Default network configuration: <br/>
+<img src="https://i.imgur.com/1OWU34A.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
+Updating network configuration pt. 2: <br/>
+<img src="https://i.imgur.com/SfTvd4w.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Save configuration: <br/>
+<img src="https://i.imgur.com/OypzBgL.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+  
+Clear the screen > "sudo netplan apply" command > "ip a" to check IP address > IP address now matches the one stated in the diagram. Ping Google to verify connection. 
+<p align="center">
+Verify network changes & connectivity: <br/>
+<img src="https://i.imgur.com/bacD42W.png" width="80%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+
+Time to install Splunk. On the host machine > navigate to Splunk.com > sign-up for a Splunk account > Products > Free trials and downloads > Splunk Enterprise > get free Trial > Linux OS > download .deb file.
+<p align="center">
+Splunk Free Trials & Downloads: <br/>
+<img src="https://i.imgur.com/2q5pd7S.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Splunk Enterprise free trial: <br/>
+<img src="https://i.imgur.com/0cZRT4L.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Linux OS .deb file: <br/>
+<img src="https://i.imgur.com/FjL8N04.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+
+Head back to Splunk VM command line to install guest add-ons for VB > command "sudo apt-get install virtualbox (Tab key to see options), interested in the guest additions iso, full command "sudo apt-get install virtualbox-guest-additions-iso" > Y > Enter for default services to be restarted. Packages should be installed now. 
+<p align="center">
+Install & update additions iso: <br/>
+<img src="https://i.imgur.com/B49QISu.png" width="100%" alt="Active-Directory-Project"/>
+<br/>
+
+Add a shared folder in the Splunk VM where Splunk Enterprise was downloaded on the host machine: at the top of the Splunk VM window > Devices > Shared Folders > Settings > Add folder at the right side > input folder path, folder name, check the Read-only, Auto-mount, Make Permanent > OK. 
+<p align="center">
+Shared folder settings: <br/>
+<img src="https://i.imgur.com/fUTCHIy.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Folder path, name, & configs: <br/>
+<img src="https://i.imgur.com/BxM0NbI.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Shared folder added: <br/>
+<img src="https://i.imgur.com/ZgXQTyl.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+
