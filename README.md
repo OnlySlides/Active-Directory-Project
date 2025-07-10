@@ -169,3 +169,21 @@ Shared folder added: <br/>
 <img src="https://i.imgur.com/ZgXQTyl.png" width="60%" alt="Active-Directory-Project"/>
 <br/>
 
+Back on the Splunk VM, reboot the machine with "sudo reboot" command and log back in after. <br/>
+Add user (yourself) to the vboxsf group: after logging back in > "sudo adduser (your username) vboxsf" command. 
+<p align="center">
+Add user to vboxsf group: <br/>
+<img src="https://i.imgur.com/dNOqI8K.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+
+Create a new directory called 'share': "mkdir share" command > "ls" command > see the folder in blue. We want to mount the shared folder on to the directory called Share: "sudo mount -t vboxsf -o uid=1000,gid=1000 Downloads share/" command > "ls -la" command to see share folder is now highlighted > change directories with "cd share/" command > "ls -la" command to view files in my Downloads folder including the Splunk installer (not shown in image)
+<p align="center">
+Create new directory called "share": <br/>
+<img src="https://i.imgur.com/pd8J0bY.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Mount shared folder onto the directory "share": <br/>
+<img src="https://i.imgur.com/iVk04UP.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+share/Downloads folder files: <br/>
+<img src="https://i.imgur.com/SH7cK2C.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
