@@ -187,3 +187,5 @@ Mount shared folder onto the directory "share": <br/>
 share/Downloads folder files: <br/>
 <img src="https://i.imgur.com/SH7cK2C.png" width="60%" alt="Active-Directory-Project"/>
 <br/>
+
+To install Splunk: "sudo dpkg -i splunk(tab key)" Enter. Complete = Splunk install complete. Change into the direcotry of where Splunk is located on our server: "cd opt/splunk" command > "ls -la" command, notice all users and groups belong to Splunk which is a good thing that limit permissions to the Splunk user > 
