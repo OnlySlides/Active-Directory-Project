@@ -20,6 +20,8 @@ Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.c
 
 ### Takeaways (CHANGE IF NEEDED OR REMOVE IF UNNECESSARY)
 This guided project is a great example of why it is so important to understand a multitude of tools and how they intersect in order to achieve a certain result. During my self-study on HackTheBox, they use Splunk as the primary SIEM so the introduction to Microsoft's SIEM in this lab was interesting but also overwhelming. With little knowledge in PS, retrieving the specific data for the report would not have been possible without the provided script. 
+-------------------------
+Halfway thorugh, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after. This felt like a big win for me.
 
 ### Steps
 This project will be split into 5 parts: 
@@ -188,4 +190,61 @@ share/Downloads folder files: <br/>
 <img src="https://i.imgur.com/SH7cK2C.png" width="60%" alt="Active-Directory-Project"/>
 <br/>
 
-To install Splunk: "sudo dpkg -i splunk(tab key)" Enter. Complete = Splunk install complete. Change into the direcotry of where Splunk is located on our server: "cd opt/splunk" command > "ls -la" command, notice all users and groups belong to Splunk which is a good thing that limit permissions to the Splunk user > 
+To install Splunk: "sudo dpkg -i splunk(tab key)" Enter. Complete = Splunk install complete. Change into the direcotry of where Splunk is located on our server: "cd opt/splunk" command > "ls -la" command, notice all users and groups belong to Splunk which is a good thing that limit permissions to the Splunk user > change into the Splunk user "sudo -u splunk bash" ENTER > "cd bin" to change into bin direcotry > files listed in bin are all binaries that Splunk can use > binary used is ./splunk so "./splunk start" ENTER to run installer > general terms and license agreement > hold Enter to view > set up username & password > wait for completion > installation complete. 
+<p align="center">
+Splunk install command: <br/>
+<img src="https://i.imgur.com/MIi0JM4.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Change into Splunk directory: <br/>
+<img src="https://i.imgur.com/u40Awdk.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+Change to Splunk user, bin directory, start installer : <br/>
+<img src="https://i.imgur.com/UEGMW5Z.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Licenses & Terms; hold Enter to view next lines: <br/>
+<img src="https://i.imgur.com/KgAtyta.png" width="55%" alt="Active-Directory-Project"/>
+<br/>
+After setting up username & password, installation complete: <br/>
+<img src="https://i.imgur.com/Fn9lE2j.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+
+Run 1 more command to ensure Splunk starts up every time the VM reboots: command "exit" to exit out of the user Splunk > command "cd bin" to change directory to bin > "sudo ./splunk enable boot-start -user splunk" command tells Splunk to run with the user Splunk whenever the VM reboots.
+<p align="center">
+User specific reboot command: <br/>
+<img src="https://i.imgur.com/h9x66fz.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+
+Time to install Splunk universal forwarder & Sysmon on the target machine and server; the process is very similar for the installations on both machines. <br/>
+On the target machine, update IP address. Open CMD > "ipconfig" to check IP address > change IP address > network icon at bottom right of desktop > Open Network & Internet Settings > Change adapter options > right click > properties > IPv4 > properties > use the following IP address option to set a static IP > IP Address: 192.168.10.100, Subnet: 255.255.255.0, default gateway: 192.168.10.1 > Preferred DNS server: 8.8.8.8 > OK > close > open CMD > "ipconfig" > results should have the updated IP address so there are no IP conflicts. 
+<p align="center">
+Initial ipconfig: <br/>
+<img src="https://i.imgur.com/SHtu0IL.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+IPv4 adapter properties: <br/>
+<img src="https://i.imgur.com/B5mbEf9.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+IP addresses according to diagram: <br/>
+<img src="https://i.imgur.com/tdfdjrt.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+New static IP address: <br/>
+<img src="https://i.imgur.com/FvAqC4H.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+
+With a static IP address, open web browser on the target machine to try accessing Splunk server > 192.168.10.10:8000 (Splunk listens on port 8000) > not connecting for me so let's troubleshoot (took me 2 hours) > likely firewall issue so adding port 8000 in the Windows Defender firewall inbound & outbound rules > in Splunk server firewall (ufw), added traffic from Windows machine IP address to port 8000 for any protocols > works > big win. 
+<p align="center">
+192.168.10.10:8000: <br/>
+<img src="https://i.imgur.com/pLVyuqw.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Unable to connect: <br/>
+<img src="https://i.imgur.com/Z0wtRkz.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Add port 8000 to Wins firewall inbound & outbound: <br/>
+<img src="https://i.imgur.com/Hx2DfHw.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Update ufw rules: <br/>
+<img src="https://i.imgur.com/3u2r4pQ.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Connection successful after: <br/>
+<img src="https://i.imgur.com/SZ4MgZK.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
