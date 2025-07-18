@@ -248,3 +248,6 @@ Update ufw rules: <br/>
 Connection successful after: <br/>
 <img src="https://i.imgur.com/SZ4MgZK.png" width="70%" alt="Active-Directory-Project"/>
 <br/>
+<br/>
+
+Time to install Splunk Universal on target machine > Splunk.com > login > Products > Free trials and downloads > Universal Forwarder > Get my Free download > ensure on-premise Splunk Enterprise instance > set-up credentials (admin, generate random pw option checked) > no deployment server so skip > receiving indexer = splunk server so input our splunk IP, default port for Splunk to receive events is 9997 so leaving as is > Install. 
