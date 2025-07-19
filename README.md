@@ -14,7 +14,7 @@ Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.c
 ### Tools Used
 - draw.io to create the logical diagram
 - Wins server as the AD
-- Splunk universal forwarder to send data back to the Splunk server
+- Splunk universal forwarder(UF) to send data back to the Splunk server
 - ART to generate the attack telemetry 
 - Sysmon installed on the AD server and target machine to view the attack telemetry 
 
@@ -215,7 +215,7 @@ User specific reboot command: <br/>
 <br/>
 <br/>
 
-Time to install Splunk universal forwarder & Sysmon on the target machine and server; the process is very similar for the installations on both machines. <br/>
+Time to install Splunk UF & Sysmon on the target machine and server; the process is very similar for the installations on both machines. <br/>
 On the target machine, update IP address. Open CMD > "ipconfig" to check IP address > change IP address > network icon at bottom right of desktop > Open Network & Internet Settings > Change adapter options > right click > properties > IPv4 > properties > use the following IP address option to set a static IP > IP Address: 192.168.10.100, Subnet: 255.255.255.0, default gateway: 192.168.10.1 > Preferred DNS server: 8.8.8.8 > OK > close > open CMD > "ipconfig" > results should have the updated IP address so there are no IP conflicts. 
 <p align="center">
 Initial ipconfig: <br/>
@@ -250,4 +250,93 @@ Connection successful after: <br/>
 <br/>
 <br/>
 
-Time to install Splunk Universal on target machine > Splunk.com > login > Products > Free trials and downloads > Universal Forwarder > Get my Free download > ensure on-premise Splunk Enterprise instance > set-up credentials (admin, generate random pw option checked) > no deployment server so skip > receiving indexer = splunk server so input our splunk IP, default port for Splunk to receive events is 9997 so leaving as is > Install. 
+Time to install Splunk UF on target machine > Splunk.com > login > Products > Free trials and downloads > Universal Forwarder > Get my Free download > ensure on-premise Splunk Enterprise instance > set-up credentials (admin, generate random pw option checked) > no deployment server so skip > receiving indexer = Splunk server so input our Splunk IP, default port for Splunk to receive events is 9997 so leaving as is > Install. 
+<p align="center">
+Universal Forwarder on Splunk.com: <br/>
+<img src="https://i.imgur.com/pi7JgAa.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Specific UF download file: <br/>
+<img src="https://i.imgur.com/o9iUu6x.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+Open file after download is finished: <br/>
+<img src="https://i.imgur.com/OpKtd4C.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+On-premise Splunk Enterprise instance: <br/>
+<img src="https://i.imgur.com/A13wHKb.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Receiving indexer=Splunk server IP: <br/>
+<img src="https://i.imgur.com/iWtBryn.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Install & Finish: <br/>
+<img src="https://i.imgur.com/emR85uP.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+
+Need to instruct Splunk forwarder on what we want to send to the Splunk server. <br/>
+On the target machine, configuration file called inputs.conf > file path: C:\Program Files\SplunkUniversalForwarder\etc\system\default > copy the contents of the inputs.conf file into an administrator privilege Notepad > the content instructs the Splunk forwarder to push events related to Application, Security, System, and Sysmon over to the Splunk server > notice index = endpoint; events that fall under the categories (Application, Security, System, etc) will be sent over to Splunk and placed under the index "Endpoint",  if Splunk server does not have an index named Endpoint, it will not receive any of the events > save the Notepad in local directory (C:\Program Files\SplunkUniversalForwarder\etc\system\local). 
+<p align="center">
+inputs.conf file: <br/>
+<img src="https://i.imgur.com/l2Atb3p.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Copy & paste inputs.conf file contents into a new Notepad: <br/>
+<img src="https://i.imgur.com/1g1pUf7.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Save new file in local directory: <br/>
+<img src="https://i.imgur.com/P1wfFs2.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+
+Point of creating a new file in a different directory is because we do not want to edit the default directory as that serves as a backup. 
+
+Anytime inputs.conf file is updated, Splunk's UF need to be restarted. To restart Splunk's UF service: search Services in start menu > run as administrator > Search for Splunk Forwarder > scrolling to the right > notice NT SERVICE > double click on it > account might not be able to collect logs due to some of its permissions > select Local System Account instead > Apply and OK > Restart the service > OK if error 1503 occurs > Start service
+<p align="center">
+Splunk Forwarder Services > NT SERVICE: <br/>
+<img src="https://i.imgur.com/CYOIf6d.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+NT SERVICE account: <br/>
+<img src="https://i.imgur.com/k5q7eXk.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+Select Local System account instead: <br/>
+<img src="https://i.imgur.com/Rt5gePg.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+Local System now: <br/>
+<img src="https://i.imgur.com/hsUVMS4.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Restart the service: <br/>
+<img src="https://i.imgur.com/S4durA0.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
+Error is fine > Ok: <br/>
+<img src="https://i.imgur.com/SCYJdUV.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Start the service: <br/>
+<img src="https://i.imgur.com/2XaQEwI.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
+
+Install Sysmon with Olaf configuration file. This is already completed on this machine so steps will not be displayed below. There are a multitude of resources out there on how to install Sysmon. <br/>
+Splunk UF and Sysmom installed.
+
+Time to finalize Splunk server configurations. In Splunk web portal > login > Settings > Indexes > this is where we create the ENDPOINT index mentioned in the inputs.conf file > New index > name it > Save 
+<p align="center">
+Settings at the top of Splunk homepage: <br/>
+<img src="https://i.imgur.com/L7aMbre.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Indexes > New Index: <br/>
+<img src="https://i.imgur.com/E3YuvWt.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+New endpoint index: <br/>
+<img src="https://i.imgur.com/hrfo2lm.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+
+We then need to enable Splunk server to receive the data > Settings > Forwarding and receiving > Configure receiving > New Receiving Port > 9997 since that was the default port inputted when setting up the forwarder > Save
+<p align="center">
+Settings > Forwarding and receiving: <br/>
+<img src="https://i.imgur.com/ejo8x84.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+COnfigure receiving: <br/>
+<img src="https://i.imgur.com/OK6viOe.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+Input new receiving port and Save: <br/>
+<img src="https://i.imgur.com/2r3xdc0.png" width="65%" alt="Active-Directory-Project"/>
+<br/>
+Successful port addition: <br/>
+<img src="https://i.imgur.com/oMUjzaE.png" width="65%" alt="Active-Directory-Project"/>
+<br/>
