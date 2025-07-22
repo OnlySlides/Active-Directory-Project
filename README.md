@@ -47,6 +47,8 @@ Complete logical diagram: <br/>
 <img src="https://i.imgur.com/yh04pcG.png" width="60%" alt="Active-Directory-Project"/>
 <br/>
 Information within the diagram will be referenced throughout the project. 
+<br/>
+<br/>
 
 #### Part 2: Install VMs on VirtualBox (VB); Wins 10, Kali Linux, Ubuntu Server, & Wins Server 2022
 Wins 10 & Kali Linux is already set up on VB so steps will not be shown below. <br/>
@@ -103,6 +105,7 @@ We now have 4 VMs installed.
 <p align="center">
 4 VMs: <br/>
 <img src="https://i.imgur.com/bE8F2hi.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
 <br/>
 
 #### Part 3: Install Sysmon & Splunk onto Wins target machine & Wins server
@@ -250,7 +253,7 @@ Connection successful after: <br/>
 <br/>
 <br/>
 
-Time to install Splunk UF on target machine > Splunk.com > login > Products > Free trials and downloads > Universal Forwarder > Get my Free download > ensure on-premise Splunk Enterprise instance > set-up credentials (admin, generate random pw option checked) > no deployment server so skip > receiving indexer = Splunk server so input our Splunk IP, default port for Splunk to receive events is 9997 so leaving as is > Install. 
+Time to install Splunk UF on target machine > Splunk.com > login > Products > Free trials and downloads > Universal Forwarder > Get my Free download > ensure on-premise Splunk Enterprise instance > set-up credentials (admin, generate random pw option checked) > no deployment server so skip > receiving indexer = Splunk server so input the Splunk IP, default port for Splunk to receive events is 9997 so leaving as is > Install. 
 <p align="center">
 Universal Forwarder on Splunk.com: <br/>
 <img src="https://i.imgur.com/pi7JgAa.png" width="35%" alt="Active-Directory-Project"/>
@@ -287,7 +290,7 @@ Save new file in local directory: <br/>
 
 Point of creating a new file in a different directory is because we do not want to edit the default directory as that serves as a backup. 
 
-Anytime inputs.conf file is updated, Splunk's UF need to be restarted. To restart Splunk's UF service: search Services in start menu > run as administrator > Search for Splunk Forwarder > scrolling to the right > notice NT SERVICE > double click on it > account might not be able to collect logs due to some of its permissions > select Local System Account instead > Apply and OK > Restart the service > OK if error 1503 occurs > Start service
+Any time inputs.conf file is updated, Splunk's UF need to be restarted. To restart Splunk's UF service: search Services in start menu > run as administrator > Search for Splunk Forwarder > scrolling to the right > notice NT SERVICE > double click on it > account might not be able to collect logs due to some of its permissions > select Local System Account instead > Apply and OK > Restart the service > OK if error 1503 occurs > Start service
 <p align="center">
 Splunk Forwarder Services > NT SERVICE: <br/>
 <img src="https://i.imgur.com/CYOIf6d.png" width="70%" alt="Active-Directory-Project"/>
@@ -340,3 +343,60 @@ Input new receiving port and Save: <br/>
 Successful port addition: <br/>
 <img src="https://i.imgur.com/oMUjzaE.png" width="65%" alt="Active-Directory-Project"/>
 <br/>
+
+If everything was set up properly, we should start seeing data coming in from the target machine. pps at the top left > Search & Reporting > search for the endpoint index > note timeframe (24 hours is fine in this instance) > immediately see events > see that the host is my Wins VM's pc name(BDEMOVM) > source types are the ones indicated in the inputs.conf file.
+<p align="center">
+Apps > Search & Reporting: <br/>
+<img src="https://i.imgur.com/5E7LLPz.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+endpoint index search: <br/>
+<img src="https://i.imgur.com/CqFgkia.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Host filter in search results: <br/>
+<img src="https://i.imgur.com/Q6QIjYM.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Sources from inputs.conf file: <br/>
+<img src="https://i.imgur.com/8SxUntD.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+
+Time to install Sysmon & UF on my own on the ADDC server VM; steps should be the same as installing Sysmon & UF on the target machine. 
+
+Need to change the IP address of the AD VM to match the one in diagram. Start AD VM > open CMD > "ipconfig" command to check current IP address > Network & Adapter Settings > IP address of 192.168.10.7, default gateway of 192.168.10.1, DNS of 8.8.8.8 > rename the machine to ADDC01 > Restart VM > device name has updated > open CMD to check updated IP address with "ipconfig" command > ping the Splunk server to ensure connectivity. 
+<p align="center">
+AD VM previous IP address: <br/>
+<img src="https://i.imgur.com/nGzswys.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Update AD VM IP address: <br/>
+<img src="https://i.imgur.com/xIttTgi.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Rename VM: <br/>
+<img src="https://i.imgur.com/Ek4uUEa.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Device name updated: <br/>
+<img src="https://i.imgur.com/84DdaZ7.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+IP address updated to match diagram: <br/>
+<img src="https://i.imgur.com/DGfSj5z.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Ping Splunk server IP address: <br/>
+<img src="https://i.imgur.com/Hq1TU9R.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+
+Install Splunk UF & Sysmon on the AD VM. Steps are literally the same as when it was installed on the target machine above. Sysmon steps are omitted again. <br/>
+
+Splunk.com > login > Products > Free trials and downloads > Universal Forwarder > Get my Free download > ensure on-premise Splunk Enterprise instance > set-up credentials (admin, generate random pw option checked) > no deployment server so skip > receiving indexer = Splunk server so input the Splunk IP, default port for Splunk to receive events is 9997 so leaving as is > Install. <br/>
+Inputs.conf file steps & removing NT SERVICE steps are the same as above. 
+<p align="center">
+Services > UF switch to Local System. Sysmon verified installed: <br/>
+<img src="https://i.imgur.com/qNPwpSi.png" width="75%" alt="Active-Directory-Project"/>
+<br/>
+  
+No need to enable splunk server to receive the data or create new index since that was done previously and the receiving port is the same (9997). If everything was installed & set-up correctly > refresh or search for the endpoint index again in Splunk > should now see 2 hosts.
+<p align="center">
+2 hosts with Splunk endpoint index search: <br/>
+<img src="https://i.imgur.com/6E6F1qH.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+
+#### Part 4: Install & configure AD on Wins server and promote to DC, create new domian users, and join the target machien into the domain
