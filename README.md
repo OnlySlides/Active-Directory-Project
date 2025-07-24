@@ -28,8 +28,8 @@ This project will be split into 5 parts:
 1. Build/draw a logical diagram
 2. Install & configure Wins server 2022 (AD), Wins 10 (target machine), Kali (attacking machine), Splunk (Ubuntu server 22.04)
 3. Install and configure Sysmon & Splunk
-4. Configure AD on Wins server and promote to DC, create new domian users, and join the target machien into the domain
-5. Generate telemtry with Kali & ART by attacking one of the users in part 4.
+4. Configure AD on Wins server and promote to DC, create new domain users, and join the target machine into the domain
+5. Generate telemtry with Kali & ART by attacking one of the users in part 4
 
 #### Part 1: Create & Map out a Logical Diagram
 Navigate to draw.io > search for a server icon and duplicate it, 1 for Splunk & 1 for AD > search for computer icon and duplicate it, 1 for target machine & 1 for attacker machine > change colour of attacker machine to red. <br/>
@@ -399,4 +399,77 @@ No need to enable splunk server to receive the data or create new index since th
 <br/>
 <br/>
 
-#### Part 4: Install & configure AD on Wins server and promote to DC, create new domian users, and join the target machien into the domain
+#### Part 4: Install & configure AD on Wins server and promote to DC, create new domain users, and join the target machine into the newly created domain
+Set a static IP address on the AD server (already done previously) > verify connectivity by pinging Google.com & the Splunk server; note that ping between Wins computers won't work as they block ICMP traffic by default. Head to Server Manager after verifying connectivity. 
+<p align="center">
+Ping Google.com & Splunk server: <br/>
+<img src="https://i.imgur.com/Lhr2jCS.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+
+Server Manager > Manage at the top right corner > Add Roles and Features > Next > Select "Role-based or feature-based installation" in Installation Type > only have 1 server > Select Active Directory Domain Services (AD DS) in Server Roles > Add Features > Next > Next > Install
+<p align="center">
+Manage in Server Manager: <br/>
+<img src="https://i.imgur.com/hBzohta.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+AD server as the destination server: <br/>
+<img src="https://i.imgur.com/xdegttc.png" width="55%" alt="Active-Directory-Project"/>
+<br/>
+AD DS server role: <br/>
+<img src="https://i.imgur.com/T7Ts2re.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Add AD DS features: <br/>
+<img src="https://i.imgur.com/Pp3EQbG.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Confirm & install: <br/>
+<img src="https://i.imgur.com/61ss45L.png" width="55%" alt="Active-Directory-Project"/>
+<br/>
+Install complete: <br/>
+<img src="https://i.imgur.com/MarVRnR.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+
+After installation, configuration is required: flag icon beside Manage > "Promote this server to a DC" because we are creating a new domain > Add a new forest > blearn.local domain name > domain name must have a top level domain (can't be just blearn, must be blearn.#) > Next > leave everything default & input PW > leave things default & Next until Prerequisites Check > Install > Server will automatically restart after
+<p align="center">
+Promote the server to DC: <br/>
+<img src="https://i.imgur.com/6rNcZej.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+New forest & domain name: <br/>
+<img src="https://i.imgur.com/WHAL0VZ.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Install: <br/>
+<img src="https://i.imgur.com/D59DyNc.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+
+After restart, the domain followed by backslash indicate successfull installation of AD DS and promotion of the server to Domain Controller. Next step is to create some users. <br/>
+
+Login > In Server Manager top right > Tools > AD Users and Computers (where we can create objects) > expand our blearn.local domain and click on Builtin, these groups are automatically created by AD like the Administrators group. <br/>
+
+In the real world, users are likely broken up into different organizational units like HR, Accounting, etc. To mimic that: right click domain > New > Organizational Unit (OU) > IT > OK. To create a new user within the IT unit, right click > New > User > input user details & credentials > lab environment so we are ignoring password policies > Finish. <br/>
+Create another OU for HR and new user within HR: same steps as above. 
+<p align="center">
+Successful install of AD DS & promotion to DC: <br/>
+<img src="https://i.imgur.com/bjuiKES.png" width=30%" alt="Active-Directory-Project"/>
+<br/>
+Server Manager AD Users & Computers to create objects: <br/>
+<img src="https://i.imgur.com/GtaJosf.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Example of Administrator group in Builtin: <br/>
+<img src="https://i.imgur.com/RhzOvnW.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Create a new OU: <br/>
+<img src="https://i.imgur.com/K14Jnny.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+New IT OU: <br/>
+<img src="https://i.imgur.com/j6rSJhG.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Create a new user in IT OU: <br/>
+<img src="https://i.imgur.com/eU9BA44.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+New user Jenny in IT OU: <br/>
+<img src="https://i.imgur.com/b461WvF.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+<img src="https://i.imgur.com/zbD4JGq.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+New user Terry in new OU HR: <br/>
+<img src="https://i.imgur.com/u3q7eg8.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+
