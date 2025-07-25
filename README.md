@@ -473,3 +473,45 @@ New user Terry in new OU HR: <br/>
 <img src="https://i.imgur.com/u3q7eg8.png" width="40%" alt="Active-Directory-Project"/>
 <br/>
 
+Time to join the new blearn.local domain to the Wins target machine using Jenny Smith's account. <br/>
+On the Wins target machine, "PC" in Wins search > Properties > scroll down and select Advanced system settings >  Computer Name tab > Change > Select Domain instead of Workgroup > input domain > get an error because target machine does not know how to resolve blearn.local = DNS issue. <br/>
+Bottom right network icon > Open Network and Internet settings > change adapter options > right click the adapter > Properties > double click IPv4 > pointing to Google's DNS > edit so it points to our DC hosted on 192.168.10.7 > OK > verify in CMD with "ipconfig /all" > DNS Servers address updated so it should now be good to join the domain. <br/>
+Back in PC system properties > click on OK after inputting domain > prompted to enter credentials > use administrator account of the server to log in as it has the proper permissions > restart computer after > select "Other user" > log in with newly created user called Jenny Smith, username = jsmith > ensure Sign in to: is pointing to our domain
+<p align="center">
+Advanced system settings in PC Properties: <br/>
+<img src="https://i.imgur.com/NQguMiU.png" width="20%" alt="Active-Directory-Project"/>
+<br/>
+Change domain in Computer Name: <br/>
+<img src="https://i.imgur.com/BaY6yRd.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Domain instead of Workgroup & Error: <br/>
+<img src="https://i.imgur.com/kl6Edkx.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+DNS server pointing to Google: <br/>
+<img src="https://i.imgur.com/gLO9io1.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Edit DNS to point to DC hosted on 192.168.10.7: <br/>
+<img src="https://i.imgur.com/C1Qtx1M.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Verify updated DNS address in CMD: <br/>
+<img src="https://i.imgur.com/jKoHYRY.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Switch to Domain & input administrator credentials: <br/>
+<img src="https://i.imgur.com/nnK0Oad.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Successful domain change: <br/>
+<img src="https://i.imgur.com/NdfEUf0.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Other user & log in with Jenny's credentials: <br/>
+<img src="https://i.imgur.com/qx3p4oj.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+Successful domain join & domain user login: <br/>
+<img src="https://i.imgur.com/ClszwMt.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+
+Part 4 completed as new users were created, the machine was joined to a new domain, and we logged in as a domain user.
+
+#### Part 5: Utilize Kali Linux to perform brute force attack onto a user created in part 4 to view Telemetry via Splunk. Setup and Install ART (Atomic Red Team) to run Atomic tests.
+
+On the Kali machine, static IP address needs to be set up. Start Kali VM > right click Ethernet Connection at the top right > Edit Connections > select the 1st profile "Wired connection 1" >input 192.168.10.250 as per the diagram >  bottom Settings > IPv4 Settings > set method to Manual > Add > 192.168.10.250 > Netmask: 24 > Gateway: 192.168.10.1 > DNS: 8.8.8.8 > Save
+
