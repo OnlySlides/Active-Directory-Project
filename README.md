@@ -513,5 +513,36 @@ Part 4 completed as new users were created, the machine was joined to a new doma
 
 #### Part 5: Utilize Kali Linux to perform brute force attack onto a user created in part 4 to view Telemetry via Splunk. Setup and Install ART (Atomic Red Team) to run Atomic tests.
 
-On the Kali machine, static IP address needs to be set up. Start Kali VM > right click Ethernet Connection at the top right > Edit Connections > select the 1st profile "Wired connection 1" >input 192.168.10.250 as per the diagram >  bottom Settings > IPv4 Settings > set method to Manual > Add > 192.168.10.250 > Netmask: 24 > Gateway: 192.168.10.1 > DNS: 8.8.8.8 > Save
+On the Kali machine, static IP address needs to be set up. Start Kali VM > right click Ethernet Connection at the top right > Edit Connections > select the 1st profile "Wired connection 1" > click on cog icon at the bottom left > IPv4 Settings > set Method to Manual instead of DHCP > Add > input 192.168.10.250 as per the diagram for IP address > Netmask: 24 > Gateway: 192.168.10.1 > DNS: 8.8.8.8 > Save > Close
+<p align="center">
+Kali VM edit network connections: <br/>
+<img src="https://i.imgur.com/NEUdENl.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
+Wired Connection 1: <br/>
+<img src="https://i.imgur.com/Ya3nGiu.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Updated wired connection 1 info: <br/>
+<img src="https://i.imgur.com/dztW9CU.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
 
+Right click on the Kali desktop > Open Terminal Here > command "ip a" > if IP address is not correct > click on Ethernet icon at the top right of desktop > Disconnect > Click Ethernet icon again > select the Wired connection 1 profile > clear out the screen in terminal > "ip a" command to verify IP address > ping Google to verify connectivity. Update & upgrade repositories with command "sudo apt-get update && sudo apt-get upgrade -y".
+<p align="center">
+Check IP address: <br/>
+<img src="https://i.imgur.com/TGLBKlY.png" width="55%" alt="Active-Directory-Project"/>
+<br/>
+Incorrect IP address so disconnect and reconnect: <br/>
+<img src="https://i.imgur.com/14Ez4RH.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
+Correct IP address now: <br/>
+<img src="https://i.imgur.com/IeRGIsi.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+Ping Google to verify connectivity: <br/>
+<img src="https://i.imgur.com/an3NWIv.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Update & upgrade repositories: <br/>
+<img src="https://i.imgur.com/nH3A9Qn.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+  
+Ready to set up the attack by creating a new directory called ad-project with command "mkdir ad-product"; that creates a directory on the desktop and all files we create and use will be put in that directory. <br/>
+Crowbar will be used as the attack tool used to perform brute-forced attacks that can target the DC or target machine. 
