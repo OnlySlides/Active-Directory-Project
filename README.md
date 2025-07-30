@@ -545,4 +545,42 @@ Update & upgrade repositories: <br/>
 <br/>
   
 Ready to set up the attack by creating a new directory called ad-project with command "mkdir ad-product"; that creates a directory on the desktop and all files we create and use will be put in that directory. <br/>
-Crowbar will be used as the attack tool used to perform brute-forced attacks that can target the DC or target machine. 
+Crowbar will be used as the attack tool used to perform brute-forced attacks that can target the DC or target machine. <br/>
+
+Open terminal in Kali VM > command "mkdir ad-product" to create a new directory on the desktop > command "sudo apt-get install -y crowbar" to install the attack tool Crowbar > switch to a different directory where a popular wordlist is within Kali with command "cd /usr/share/wordlists/" > command "ls" to see the files within the 'wordlists' directory > notice the 'rockyou.txt.gz' file with gz(gunzip) extension > need to unzip the file using gunzip with command "sudo gunzip rockyou.txt.gz" > "ls" command again and gz extension should be gone > copy the file into the ad-project folder with command "cp rockyou.txt ~/Desktop/ad-project" > change into ad-project directory "cd ~/Desktop/ad-project" > "ls -lh" command to see file details.
+<p align="center">
+Create ad-project directory: <br/>
+<img src="https://i.imgur.com/uqlFL9E.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Install Crowbar: <br/>
+<img src="https://i.imgur.com/7CmP0oL.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Locate rockyou.txt.gz & unzip > copy file into ad-project directory: <br/>
+<img src="https://i.imgur.com/3srpEyr.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+See file details: <br/>
+<img src="https://i.imgur.com/wYR56XZ.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+
+The txt file contains a lot of passwords and not all is needed for this project: command "head -n 20 rockyou.txt" = only want the 1st 20 lines of the txt file pointing to rockyou.txt > see 20 lines of output > output the contents into a file called passwords.txt with command "head -n 20 rockyou.txt > passwords.txt", the passwords.txt file is automatically created > command "ls" and we should see a passwords.txt file > open the file by command "cat passwords.txt". <br/>
+In this scenario, we want to target a certain password so let's edit the passwords list: command "nano passwords.txt" to edit > add the password at the bottom of the file > Ctrl X to save > Y > Enter > verify password addition by command "cat passwords.txt".
+<p align="center">
+First 20 lines of output: <br/>
+<img src="https://i.imgur.com/Wf16MZW.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Output content into new txt file > "cat passwords.txt" to check output: <br/>
+<img src="https://i.imgur.com/U7RTPeo.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+New text file created: <br/>
+<img src="https://i.imgur.com/nIyF0Ds.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
+Add password into password.txt file: <br/>
+<img src="https://i.imgur.com/K6qGMwA.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Verify password addition with "cat passwords.txt" command: <br/>
+<img src="https://i.imgur.com/IlbBFYS.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+
+
+
+
