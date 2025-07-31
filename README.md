@@ -29,7 +29,7 @@ This project will be split into 5 parts:
 2. Install & configure Wins server 2022 (AD), Wins 10 (target machine), Kali (attacking machine), Splunk (Ubuntu server 22.04)
 3. Install and configure Sysmon & Splunk
 4. Configure AD on Wins server and promote to DC, create new domain users, and join the target machine into the domain
-5. Generate telemtry with Kali & ART by attacking one of the users in part 4
+5. Generate telemtry with Kali & ART by attacking one of the users in part 4. Guided project tool (Crowbar) was not working for so I used a different tool instead (Hydra). 
 
 #### Part 1: Create & Map out a Logical Diagram
 Navigate to draw.io > search for a server icon and duplicate it, 1 for Splunk & 1 for AD > search for computer icon and duplicate it, 1 for target machine & 1 for attacker machine > change colour of attacker machine to red. <br/>
@@ -581,6 +581,34 @@ Verify password addition with "cat passwords.txt" command: <br/>
 <img src="https://i.imgur.com/IlbBFYS.png" width="35%" alt="Active-Directory-Project"/>
 <br/>
 
+On the target machine, RDP needs to be enabled: search bar "PC" > Properties > scroll down to Advanced System settings > log in with admin account > Remote tab > Allow remote connections to this computer > select users > Add > "jsmith" Check Names > tsmith "Check Names" > OK > OK > Apply > OK to close it out > RDP is now enabled on target machine.
+<p align="center">
+Advanced system settings administrator login: <br/>
+<img src="https://i.imgur.com/vrVXwJk.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Allow remote connections to this computer & Select Users: <br/>
+<img src="https://i.imgur.com/6CVjSux.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+Add users: <br/>
+<img src="https://i.imgur.com/2Hz9f5R.png" width="20%" alt="Active-Directory-Project"/>
+<br/>
+Add Jenny & Terry (previously created users in AD): <br/>
+<img src="https://i.imgur.com/QKZFj1K.png" width="45%" alt="Active-Directory-Project"/>
+<br/>
+Addition successful: <br/>
+<img src="https://i.imgur.com/8jCaz93.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
 
-
+Back in the Kali VM, "crowbar -h" to look at the tool's details > we are interested in RDP > command "crowbar -b rdp -u tsmith -C passwords.txt -s 192.168.10.100/32" (-b to specify service, -u to specify account of interest, -C to specify the password list, -s to specify the source IP address in CIDR notation; 32 instead of 24 because we want to target this 1 IP address). <br/>
+Crowbar was not working for me like in the guided project so I pivoted and used Hydra instead by looking at resources online for a similar command as above. Command "hydra -t 1 -V -f -l tsmith -P passwords.txt rdp://192.168.10.100". -t = task value, -V = verbose, -f = quit if successfully login, -l = user, -P = passwords.txt file, service = rdp://IP address. I believe there's an even easier command to limit the output but the command worked fine for the purposes of this project. 
+<p align="center">
+View Crowbar's details: <br/>
+<img src="https://i.imgur.com/kQvofAO.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Crowbar brute force not working: <br/>
+<img src="https://i.imgur.com/ognBhWb.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Used Hydra instead: <br/>
+<img src="https://i.imgur.com/tpRKAMB.png" width="65%" alt="Active-Directory-Project"/>
+<br/>
 
