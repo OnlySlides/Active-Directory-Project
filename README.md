@@ -9,19 +9,19 @@ Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.c
 - Creating a logical diagram
 - Installing & configuring software/assets/virtual machines (VMs) including: Spunk, Wins server 2022 (AD), Wins 10 (target machine), Kali (attacking machine), Splunk (Ubuntu server 22.04)
 - Configuring AD server & promoting it to a Domain Controller (DC), creating new domain users, & joining the target machine into the domain
-- Generating telemetry with Kali & Atomic Red Team (ART) by attacking one of the users
+- Generating telemetry with Kali, Atomic Red Team (ART), and Powershell (PS) by attacking one of the users
 
 ### Tools Used
 - draw.io to create the logical diagram
 - Wins server as the AD
 - Splunk universal forwarder(UF) to send data back to the Splunk server
-- ART to generate the attack telemetry 
-- Sysmon installed on the AD server and target machine to view the attack telemetry 
+- ART & PS to generate the attack telemetry 
+- Sysmon installed on the AD server and target machine to view the attack telemetry
 
 ### Takeaways (CHANGE IF NEEDED OR REMOVE IF UNNECESSARY)
 This guided project is a great example of why it is so important to understand a multitude of tools and how they intersect in order to achieve a certain result. During my self-study on HackTheBox, they use Splunk as the primary SIEM so the introduction to Microsoft's SIEM in this lab was interesting but also overwhelming. With little knowledge in PS, retrieving the specific data for the report would not have been possible without the provided script. 
 -------------------------
-Halfway thorugh, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after. This felt like a big win for me.
+Halfway thorugh, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after adjusting some firewall configurations. This felt like a big win for me. Guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). 
 
 ### Steps
 This project will be split into 5 parts: 
@@ -29,7 +29,7 @@ This project will be split into 5 parts:
 2. Install & configure Wins server 2022 (AD), Wins 10 (target machine), Kali (attacking machine), Splunk (Ubuntu server 22.04)
 3. Install and configure Sysmon & Splunk
 4. Configure AD on Wins server and promote to DC, create new domain users, and join the target machine into the domain
-5. Generate telemtry with Kali & ART by attacking one of the users in part 4. Guided project tool (Crowbar) was not working for so I used a different tool instead (Hydra). 
+5. Generate telemtry with Kali & ART by attacking one of the users in part 4. 
 
 #### Part 1: Create & Map out a Logical Diagram
 Navigate to draw.io > search for a server icon and duplicate it, 1 for Splunk & 1 for AD > search for computer icon and duplicate it, 1 for target machine & 1 for attacker machine > change colour of attacker machine to red. <br/>
@@ -612,3 +612,54 @@ Used Hydra instead: <br/>
 <img src="https://i.imgur.com/tpRKAMB.png" width="65%" alt="Active-Directory-Project"/>
 <br/>
 
+Head to Splunk to view the generated telemetry. In Splunk enterprise homepage > Search & Reporting > input a query to target events related to the user tsmith > "index=endpoint tsmith" > 66 events > scroll down the Interesting Fields list on the left and click on EventCode > see an event count of 63 for event ID of 4625 > searching event ID 4625 on Google yields "account failed to log on" = there were 63 failed attempts to log into tsmith's account. <br/> 
+Clicking on EventCode 4625 will automatically update the query & search for it > notice the time of events are close to each other which can be clear indication of brute force activity. <br/> 
+<p align="center">
+66 tsmith events: <br/>
+<img src="https://i.imgur.com/aHE2gCF.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+63 4625 event ID events: <br/>
+<img src="https://i.imgur.com/BzmW30f.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Adding EventCode 4625 into query & notice time of events: <br/>
+<img src="https://i.imgur.com/M1oiT8o.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+
+Update query to EventCode 4624 > search on Google yields "An account logged on successfully" > 1 event > expand the event by clicking "Show all 70 lines" > source IP address belongs to the Kali Linux machine which is great.
+<p align="center">
+EventCode 4624 query result: <br/>
+<img src="https://i.imgur.com/hzD9Txt.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Event details state Kali IP address: <br/>
+<img src="https://i.imgur.com/7hqSUom.png" width="65%" alt="Active-Directory-Project"/>
+<br/>
+
+Tiem to install Atomic red team on target machine and run some tests on it. On target machine > open PS as administrator > command "Set-ExecutionPolicy Bypass CurrentUser" > Y > set exclusion for C:drive as MS defender will detect and remove some of the files from Atomic red team > click up arrow at bottom right of desktop > Windows Security > Virus & Threat Protection > Manage settings > Scroll down > Exclusions > Add or remove exclusions > Add an exclusion > Folder > This PC > Click on the C:drive > Select folder > login again as administrator > exclusion added successfully.
+<p align="center">
+Windows Security in Desktop: <br/>
+<img src="https://i.imgur.com/02BuFFx.png" width="10%" alt="Active-Directory-Project"/>
+<br/>
+Virus & threat protection settings > Exclusions: <br/>
+<img src="https://i.imgur.com/yZKuGwh.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Add an exclusion: <br/>
+<img src="https://i.imgur.com/Me0fs5W.png" width="35%" alt="Active-Directory-Project"/>
+<br/>
+C:drive exclusion: <br/>
+<img src="https://i.imgur.com/7SREbzM.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+
+Back in PS > input command from image below > command goes out to grab Atomic red team & install it on the target machine > once completed, go into C:drive > AtomicRedTeam directory > atomics > see lots of technique IDs that map back to the MITRE attack framework. If we wanted to test out a specific tactic like T1136 Create Account > we see 3 in the Mitre attack framework > we see that T1136.001 is in the C:drive as well > for this guided project, lets use the local account.
+<p align="center">
+PS command to get and install Atomic red team: <br/>
+<img src="https://i.imgur.com/Co8pyXn.png" width="80%" alt="Active-Directory-Project"/>
+<br/>
+C:drive > AtomicRedTeam > atomics > technique IDs: <br/>
+<img src="https://i.imgur.com/516HZ8T.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+T1136 IDs in atomics folder: <br/>
+<img src="https://i.imgur.com/ggMHrCL.png" width="20%" alt="Active-Directory-Project"/>
+<br/>
+T1136 found in the Mitre attack framework: <br/>
+<img src="https://i.imgur.com/di7vH4i.png" width="25%" alt="Active-Directory-Project"/>
+<br/>
