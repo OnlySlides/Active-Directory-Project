@@ -663,3 +663,6 @@ T1136 IDs in atomics folder: <br/>
 T1136 found in the Mitre attack framework: <br/>
 <img src="https://i.imgur.com/di7vH4i.png" width="25%" alt="Active-Directory-Project"/>
 <br/>
+
+In PS, command "Invoke-AtomicTest T1136.001" > Auto generate telemetry based on creating a local account > notice the username that was created > once command is finished running > Search in Splunk for the new user. <br/>
+In Splunk, search for the username with query "index=endpoint NewLocalUser" > see 12 events > most recent event logged at 4:04:24 > scroll down to the oldest event and expand the event > a new user account was created at 4:04:22 > scrolling down the same event, we even see the user attributes including password policies > expanding the most recent event, we see that the user was deleted > we can see that info coincides with the PS invoke script.
