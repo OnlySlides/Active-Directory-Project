@@ -1,7 +1,9 @@
 # Active-Directory-Project
 
 ## Objective
-Build a fully functional domain environment on premise by creating a logical diagram, installing & configuring: Active Directory (AD), Splunk, Windows (Wins) machine & Kali Linux machine. This guided project provides a basic understanding of how a domain environment works, how to ingest events to a Security Information and Event Management (SIEM), and generate telemetry related to attacks. 
+Build a fully functional domain environment on premise by creating a logical diagram, installing & configuring: Active Directory (AD), Splunk, Windows (Wins) machine & Kali Linux machine. This guided project provides a basic understanding of how a domain environment works, how to ingest events to a Security Information and Event Management (SIEM), and generate telemetry related to attacks. <br/>
+
+Guided project started on April 14, 2025, completed on April 21, 2025. <br/>
 
 Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.com/watch?v=mWqYyl89QaY). 
 
@@ -665,4 +667,104 @@ T1136 found in the Mitre attack framework: <br/>
 <br/>
 
 In PS, command "Invoke-AtomicTest T1136.001" > Auto generate telemetry based on creating a local account > notice the username that was created > once command is finished running > Search in Splunk for the new user. <br/>
-In Splunk, search for the username with query "index=endpoint NewLocalUser" > see 12 events > most recent event logged at 4:04:24 > scroll down to the oldest event and expand the event > a new user account was created at 4:04:22 > scrolling down the same event, we even see the user attributes including password policies > expanding the most recent event, we see that the user was deleted > we can see that info coincides with the PS invoke script.
+In Splunk, search for the username with query "index=endpoint NewLocalUser" > 12 events > most recent event logged at 4:04:24 > scroll down to the oldest event and expand the event > a new user account was created at 4:04:22 > scrolling down the same event, we even see the user attributes including password policies > expanding the most recent event, we see that the user was deleted > we can see that info corresponds with the PS invoke script.
+<p align="center">
+PS command to invoke attack technique T1136.001: <br/>
+<img src="https://i.imgur.com/iXXFLkI.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Info post command: <br/>
+<img src="https://i.imgur.com/XxXaw9F.png" width="80%" alt="Active-Directory-Project"/>
+<br/>
+Splunk query for NewLocalUser: <br/>
+<img src="https://i.imgur.com/vaEcOqF.png" width="75%" alt="Active-Directory-Project"/>
+<br/>
+NewLocalUser created at 4:04:22; note Message & Account Name: <br/>
+<img src="https://i.imgur.com/nPp9Gmm.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+Same event user/account attributes: <br/>
+<img src="https://i.imgur.com/pDEC3Tc.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+NewLocalAccount user deleted at 4:04:24: <br/>
+<img src="https://i.imgur.com/ABVGE4o.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+User deletion corresponds with PS script: <br/>
+<img src="https://i.imgur.com/h2mqUUz.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+
+In the guided project, technique T1059.001 is invoked again but I wanted to try something for myself. I tried technique T1021.001 since that is in the atomics folder and seems like a technique Splunk can log. I believe the test did not work but I queried the DisplayName in Splunk anyways and limitied the timeframe to the last 15 minutes (I may not have queried properly). Technique ID results did not show what I wanted but rather other techniques which was interested to discover; T1083 & T1518.001. 
+<p align="center">
+T1021.001 in the atomics folder: <br/>
+<img src="https://i.imgur.com/3mpMLR5.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+T1021.001 in the MITRE attack framework: <br/>
+<img src="https://i.imgur.com/NdOfZ7W.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Command "Invoke-AtomicTest T1021.001" in PS, note DisplayName: <br/>
+<img src="https://i.imgur.com/cuMBxrq.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+DisplayName Splunk query: <br/>
+<img src="https://i.imgur.com/D1Nh5p6.png" width="85%" alt="Active-Directory-Project"/>
+<br/>
+Technique IDs of T1083 & T1518.001 instead of T1021.001: <br/>
+<img src="https://i.imgur.com/YmV4c3r.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+T1083 info: <br/>
+<img src="https://i.imgur.com/IsnoCf6.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+T1518.001 info: <br/>
+<img src="https://i.imgur.com/wkzsAcd.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+
+For my own experience, I wanted to try brute forcing on jsmith's account if events will show up quickly in Splunk (earlier brute force waas on user tsmith). Events show up quickly on Splunk (47 events to 78 in a few minutes). <br/>
+
+Same hydra command as earlier except user is jsmith; command "hydra -t 1 -V -f -l jsmith -P passwords.txt rdp://192.168.10.100/32" > Navigate to Splunk > Splunk query "index=endpoint jsmith" > results in Splunk show EventCode of 4625 indicating a failed logon attempt :thumbsup:.
+<p align="center">
+Hydra brute forcing user jsmith: <br/>
+<img src="https://i.imgur.com/ON12NB4.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+jsmith Splunk query: <br/>
+<img src="https://i.imgur.com/QuuNwgJ.png" width="30%" alt="Active-Directory-Project"/>
+<br/>
+Query results: <br/>
+<img src="https://i.imgur.com/GYcQ9kj.png" width="60%" alt="Active-Directory-Project"/>
+<br/>
+<br/>
+  
+On a different day (April 22), I was curious to see the generated telemetry on Splunk if I edited jsmith's persmissions in the server machine ADDC01. I hoped to see an event populate in Splunk even though I did not know what changes needed to be made to incur an event to populate on Splunk. <br/>
+Start up the AD, Splunk, and Wins 10 VMs > log into Splunk on the Wins 10 machine > now ready to edit jsmith's permissions in AD > select the "User cannot change password" & "Password never expires" options > Apply > OK. <br/>
+Back in Splunk, I already had the user queried before I made the password permission changes (317 events pre-change, 386 events post-change after refreshing the page) > expand EventCode category > 2 notable events with event code 4738 indicating that a user account has been changed in AD > click on 4738 > expand 1st event; nothing notable other than the "Message=A user account was changed" which is odd > expand 2nd event; we see only 1 of the changes stated in the User Account Control that is 'Don't Expire Password'. 
+<p align="center">
+Jsmith user Properties: <br/>
+<img src="https://i.imgur.com/eGS3n9p.png" width="20%" alt="Active-Directory-Project"/>
+<br/>
+Updating jsmith's user account options: <br/>
+<img src="https://i.imgur.com/7aFj1g2.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+Events before and after updating user account options: <br/>
+<img src="https://i.imgur.com/t0IUEmJ.png" width="70%" alt="Active-Directory-Project"/>
+<br/>
+EventCode 4738 is of concern: <br/>
+<img src="https://i.imgur.com/I0AYfhZ.png" width="50%" alt="Active-Directory-Project"/>
+<br/>
+Expanding on Event ID 4738 events: <br/>
+<img src="https://i.imgur.com/hFgVzql.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+1st event has minimal info: <br/>
+<img src="https://i.imgur.com/zsnAor0.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+2nd event has info we want (Password will never expire): <br/>
+<img src="https://i.imgur.com/8jwgCyR.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+
+Let's remove the applied user settings and see what telemetry is generated in Splunk under the same event code. 1st event still does not show any info like earlier which is odd.
+<p align="center">  
+Unchecking 'User cannot change password' & 'Password never expires': <br/>
+<img src="https://i.imgur.com/RKzsxAu.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+jsmith EventCode=4738 query: <br/>
+<img src="https://i.imgur.com/Yq9SbqH.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
+2nd event that states the part of the change I made: <br/>
+<img src="https://i.imgur.com/eA3bJIZ.png" width="40%" alt="Active-Directory-Project"/>
+<br/>
