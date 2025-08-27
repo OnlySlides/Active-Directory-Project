@@ -20,10 +20,9 @@ Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.c
 - ART & PS to generate the attack telemetry 
 - Sysmon installed on the AD server and target machine to view the attack telemetry
 
-### Takeaways (CHANGE IF NEEDED OR REMOVE IF UNNECESSARY)
-This guided project is a great example of why it is so important to understand a multitude of tools and how they intersect in order to achieve a certain result. During my self-study on HackTheBox, they use Splunk as the primary SIEM so the introduction to Microsoft's SIEM in this lab was interesting but also overwhelming. With little knowledge in PS, retrieving the specific data for the report would not have been possible without the provided script. 
--------------------------
-Halfway thorugh, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after adjusting some firewall configurations. This felt like a big win for me. Guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). 
+### Notes/Experimentation
+Halfway through, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after adjusting some firewall configurations; this felt like a big win for me. 
+The guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). 
 
 ### Steps
 This project will be split into 5 parts: 
