@@ -21,9 +21,9 @@ Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.c
 - Sysmon installed on the AD server and target machine to view the attack telemetry
 
 ### Notes/Experimentation
-Halfway through, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after adjusting some firewall configurations; this felt like a big win for me. 
-The guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). After a demo of invoking a specific technique, I attempted to invoke a different technique (T1021.001) myself after. 
-Not part of the project but I wanted to see the telemetry generated in Splunk if jsmith's permissions were edited in AD so some password policies were updated to see various event codes in Splunk. 
+- Halfway through, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after adjusting some firewall configurations; this felt like a big win for me. <br/>
+- The guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). After a demo of invoking a specific technique, I attempted to invoke a different technique (T1021.001) myself after. <br/>
+- The very last section at the end was not part of the project but I wanted to see the telemetry generated in Splunk if jsmith's permissions were edited in AD so some password policies were updated to see various event codes in Splunk. 
 
 ### Steps
 This project will be split into 5 parts: 
