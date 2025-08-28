@@ -22,7 +22,8 @@ Credit for this guided project goes to [MyDfir on YouTube](https://www.youtube.c
 
 ### Notes/Experimentation
 Halfway through, the Windows machine could not connect to the Splunk server while following along the guided project. I troubleshooted the issue for a couple hours on my own and it ended up working after adjusting some firewall configurations; this felt like a big win for me. 
-The guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). 
+The guided project tool (Crowbar) was not working so I used a different tool instead (Hydra). After a demo of invoking a specific technique, I attempted to invoke a different technique (T1021.001) myself after. 
+Not part of the project but I wanted to see the telemetry generated in Splunk if jsmith's permissions were edited in AD so some password policies were updated to see various event codes in Splunk. 
 
 ### Steps
 This project will be split into 5 parts: 
@@ -715,7 +716,7 @@ T1518.001 info: <br/>
 <br/>
 <br/>
 
-For my own experience, I wanted to try brute forcing on jsmith's account if events will show up quickly in Splunk (earlier brute force waas on user tsmith). Events show up quickly on Splunk (47 events to 78 in a few minutes). <br/>
+For my own experience, I wanted to try brute forcing on jsmith's account if events will show up quickly in Splunk (earlier brute force was on user tsmith). Events show up quickly on Splunk (47 events to 78 in a few minutes). <br/>
 
 Same hydra command as earlier except user is jsmith; command "hydra -t 1 -V -f -l jsmith -P passwords.txt rdp://192.168.10.100/32" > Navigate to Splunk > Splunk query "index=endpoint jsmith" > results in Splunk show EventCode of 4625 indicating a failed logon attempt :thumbsup:.
 <p align="center">
@@ -730,7 +731,7 @@ Query results: <br/>
 <br/>
 <br/>
   
-On a different day (April 22), I was curious to see the generated telemetry on Splunk if I edited jsmith's persmissions in the server machine ADDC01. I hoped to see an event populate in Splunk even though I did not know what changes needed to be made to incur an event to populate on Splunk. <br/>
+On a different day (April 22), I was curious to see the generated telemetry on Splunk if I edited jsmith's permissions in the server machine ADDC01. I hoped to see an event populate in Splunk even though I did not know what changes needed to be made to incur an event to populate on Splunk. <br/>
 Start up the AD, Splunk, and Wins 10 VMs > log into Splunk on the Wins 10 machine > now ready to edit jsmith's permissions in AD > select the "User cannot change password" & "Password never expires" options > Apply > OK. <br/>
 Back in Splunk, I already had the user queried before I made the password permission changes (317 events pre-change, 386 events post-change after refreshing the page) > expand EventCode category > 2 notable events with event code 4738 indicating that a user account has been changed in AD > click on 4738 > expand 1st event; nothing notable other than the "Message=A user account was changed" which is odd > expand 2nd event; we see only 1 of the changes stated in the User Account Control that is 'Don't Expire Password'. 
 <p align="center">
